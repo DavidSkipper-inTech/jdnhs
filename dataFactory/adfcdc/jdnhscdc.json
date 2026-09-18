@@ -1,0 +1,304 @@
+{
+	"name": "jdnhscdc",
+	"properties": {
+		"SourceConnectionsInfo": [
+			{
+				"SourceEntities": [
+					{
+						"name": "dbo.jdnhs_sickness_absence_region_monthly",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "schemaName",
+									"value": "dbo"
+								},
+								{
+									"name": "tableName",
+									"value": "jdnhs_sickness_absence_region_monthly"
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "waterMarkColumn",
+									"value": "load_timestamp"
+								}
+							]
+						}
+					},
+					{
+						"name": "dbo.jdnhs_nss_people_promise_org",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "schemaName",
+									"value": "dbo"
+								},
+								{
+									"name": "tableName",
+									"value": "jdnhs_nss_people_promise_org"
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "waterMarkColumn",
+									"value": "load_timestamp"
+								}
+							]
+						}
+					},
+					{
+						"name": "dbo.jdnhs_nss_themes_org",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "schemaName",
+									"value": "dbo"
+								},
+								{
+									"name": "tableName",
+									"value": "jdnhs_nss_themes_org"
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "waterMarkColumn",
+									"value": "load_timestamp"
+								}
+							]
+						}
+					},
+					{
+						"name": "dbo.jdnhs_workforce_fte_org",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "schemaName",
+									"value": "dbo"
+								},
+								{
+									"name": "tableName",
+									"value": "jdnhs_workforce_fte_org"
+								},
+								{
+									"name": "enableCdc",
+									"value": true
+								},
+								{
+									"name": "waterMarkColumn",
+									"value": "load_timestamp"
+								}
+							]
+						}
+					}
+				],
+				"Connection": {
+					"linkedService": {
+						"referenceName": "sqldatabase_connection",
+						"type": "LinkedServiceReference"
+					},
+					"linkedServiceType": "AzureSqlDatabase",
+					"type": "linkedservicetype",
+					"isInlineDataset": true,
+					"commonDslConnectorProperties": [
+						{
+							"name": "allowSchemaDrift",
+							"value": true
+						},
+						{
+							"name": "inferDriftedColumnTypes",
+							"value": true
+						},
+						{
+							"name": "format",
+							"value": "table"
+						},
+						{
+							"name": "store",
+							"value": "sqlserver"
+						},
+						{
+							"name": "skipInitialLoad",
+							"value": true
+						}
+					]
+				}
+			}
+		],
+		"TargetConnectionsInfo": [
+			{
+				"TargetEntities": [
+					{
+						"name": "jdnhs_sickness_absence_region_monthly",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "container",
+									"value": "jdnhs_sickness_absence_region_monthly"
+								},
+								{
+									"name": "fileSystem",
+									"value": "jdnhs_sickness_absence_region_monthly"
+								}
+							]
+						}
+					},
+					{
+						"name": "jdnhs_nss_people_promise_org",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "container",
+									"value": "jdnhs_nss_people_promise_org"
+								},
+								{
+									"name": "fileSystem",
+									"value": "jdnhs_nss_people_promise_org"
+								}
+							]
+						}
+					},
+					{
+						"name": "jdnhs_nss_themes_org",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "container",
+									"value": "jdnhs_nss_themes_org"
+								},
+								{
+									"name": "fileSystem",
+									"value": "jdnhs_nss_themes_org"
+								}
+							]
+						}
+					},
+					{
+						"name": "jdnhs_workforce_fte_org",
+						"properties": {
+							"schema": [],
+							"dslConnectorProperties": [
+								{
+									"name": "container",
+									"value": "jdnhs_workforce_fte_org"
+								},
+								{
+									"name": "fileSystem",
+									"value": "jdnhs_workforce_fte_org"
+								}
+							]
+						}
+					}
+				],
+				"Connection": {
+					"linkedService": {
+						"referenceName": "jdnhsBronze_link",
+						"type": "LinkedServiceReference"
+					},
+					"linkedServiceType": "AzureBlobFS",
+					"type": "linkedservicetype",
+					"isInlineDataset": true,
+					"commonDslConnectorProperties": [
+						{
+							"name": "allowSchemaDrift",
+							"value": true
+						},
+						{
+							"name": "inferDriftedColumnTypes",
+							"value": true
+						},
+						{
+							"name": "format",
+							"value": "delimited"
+						},
+						{
+							"name": "columnNamesAsHeader",
+							"value": true
+						},
+						{
+							"name": "columnDelimiter",
+							"value": ","
+						},
+						{
+							"name": "escapeChar",
+							"value": "\\\\"
+						},
+						{
+							"name": "quoteChar",
+							"value": "\\\""
+						}
+					]
+				},
+				"DataMapperMappings": [
+					{
+						"targetEntityName": "jdnhs_nss_people_promise_org",
+						"sourceEntityName": "dbo.jdnhs_nss_people_promise_org",
+						"sourceConnectionReference": {
+							"connectionName": "sqldatabase_connection",
+							"type": "linkedservicetype"
+						},
+						"attributeMappingInfo": {
+							"attributeMappings": []
+						}
+					},
+					{
+						"targetEntityName": "jdnhs_nss_themes_org",
+						"sourceEntityName": "dbo.jdnhs_nss_themes_org",
+						"sourceConnectionReference": {
+							"connectionName": "sqldatabase_connection",
+							"type": "linkedservicetype"
+						},
+						"attributeMappingInfo": {
+							"attributeMappings": []
+						}
+					},
+					{
+						"targetEntityName": "jdnhs_sickness_absence_region_monthly",
+						"sourceEntityName": "dbo.jdnhs_sickness_absence_region_monthly",
+						"sourceConnectionReference": {
+							"connectionName": "sqldatabase_connection",
+							"type": "linkedservicetype"
+						},
+						"attributeMappingInfo": {
+							"attributeMappings": []
+						}
+					},
+					{
+						"targetEntityName": "jdnhs_workforce_fte_org",
+						"sourceEntityName": "dbo.jdnhs_workforce_fte_org",
+						"sourceConnectionReference": {
+							"connectionName": "sqldatabase_connection",
+							"type": "linkedservicetype"
+						},
+						"attributeMappingInfo": {
+							"attributeMappings": []
+						}
+					}
+				],
+				"Relationships": []
+			}
+		],
+		"Policy": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15
+			},
+			"mode": "Microbatch"
+		},
+		"status": "Stopped",
+		"allowVNetOverride": false,
+		"id": "910ff8a1515a476183159f67cb7e81ff"
+	}
+}

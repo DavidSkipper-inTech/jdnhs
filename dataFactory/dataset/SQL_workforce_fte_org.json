@@ -1,0 +1,77 @@
+{
+	"name": "SQL_workforce_fte_org",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqldatabase_connection",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "data_month",
+				"type": "date"
+			},
+			{
+				"name": "data_type",
+				"type": "varchar"
+			},
+			{
+				"name": "nhse_region_code",
+				"type": "varchar"
+			},
+			{
+				"name": "nhse_region_name",
+				"type": "varchar"
+			},
+			{
+				"name": "ics_code",
+				"type": "varchar"
+			},
+			{
+				"name": "ics_name",
+				"type": "varchar"
+			},
+			{
+				"name": "org_name",
+				"type": "varchar"
+			},
+			{
+				"name": "org_code",
+				"type": "varchar"
+			},
+			{
+				"name": "staff_group_category",
+				"type": "varchar"
+			},
+			{
+				"name": "staff_group_label",
+				"type": "varchar"
+			},
+			{
+				"name": "fte",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "source_file",
+				"type": "varchar"
+			},
+			{
+				"name": "source_sheet",
+				"type": "varchar"
+			},
+			{
+				"name": "load_timestamp",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "jdnhs_workforce_fte_org"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,45 @@
+{
+	"name": "SQL_sickness_absence_region_monthly",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqldatabase_connection",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "month",
+				"type": "date"
+			},
+			{
+				"name": "region_name",
+				"type": "varchar"
+			},
+			{
+				"name": "sickness_absence_rate_pct",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 3
+			},
+			{
+				"name": "source_file",
+				"type": "varchar"
+			},
+			{
+				"name": "source_sheet",
+				"type": "varchar"
+			},
+			{
+				"name": "load_timestamp",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "jdnhs_sickness_absence_region_monthly"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
