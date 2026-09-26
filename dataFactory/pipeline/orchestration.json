@@ -38,7 +38,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"jobId": "354976586818800"
+					"jobId": "675968914316141"
 				},
 				"linkedServiceName": {
 					"referenceName": "bronze_to_silver_transformations",
@@ -65,7 +65,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"jobId": "238413200522962"
+					"jobId": "948380784330235"
 				},
 				"linkedServiceName": {
 					"referenceName": "bronze_to_silver_transformations",
