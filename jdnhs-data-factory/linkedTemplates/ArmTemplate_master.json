@@ -1,0 +1,91 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "jdnhs-data-factory"
+		},
+		"bronze_to_silver_transformations_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'bronze_to_silver_transformations'"
+		},
+		"jdnhs_bronze_data_lake_link_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'jdnhs_bronze_data_lake_link'"
+		},
+		"source_sql_database_link_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'source_sql_database_link'"
+		},
+		"jdnhs_bronze_data_lake_link_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://jdnhsbronze.dfs.core.windows.net/"
+		},
+		"source_sql_database_link_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserveruktraining.database.windows.net"
+		},
+		"source_sql_database_link_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb"
+		},
+		"source_sql_database_link_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladmin"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "jdnhs-data-factory_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"bronze_to_silver_transformations_accessToken": {
+						"value": "[parameters('bronze_to_silver_transformations_accessToken')]"
+					},
+					"jdnhs_bronze_data_lake_link_accountKey": {
+						"value": "[parameters('jdnhs_bronze_data_lake_link_accountKey')]"
+					},
+					"source_sql_database_link_password": {
+						"value": "[parameters('source_sql_database_link_password')]"
+					},
+					"jdnhs_bronze_data_lake_link_properties_typeProperties_url": {
+						"value": "[parameters('jdnhs_bronze_data_lake_link_properties_typeProperties_url')]"
+					},
+					"source_sql_database_link_properties_typeProperties_server": {
+						"value": "[parameters('source_sql_database_link_properties_typeProperties_server')]"
+					},
+					"source_sql_database_link_properties_typeProperties_database": {
+						"value": "[parameters('source_sql_database_link_properties_typeProperties_database')]"
+					},
+					"source_sql_database_link_properties_typeProperties_userName": {
+						"value": "[parameters('source_sql_database_link_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

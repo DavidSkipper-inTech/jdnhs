@@ -1,0 +1,855 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "jdnhs-data-factory"
+		},
+		"bronze_to_silver_transformations_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'bronze_to_silver_transformations'"
+		},
+		"jdnhs_bronze_data_lake_link_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'jdnhs_bronze_data_lake_link'"
+		},
+		"source_sql_database_link_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'source_sql_database_link'"
+		},
+		"jdnhs_bronze_data_lake_link_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://jdnhsbronze.dfs.core.windows.net/"
+		},
+		"source_sql_database_link_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserveruktraining.database.windows.net"
+		},
+		"source_sql_database_link_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb"
+		},
+		"source_sql_database_link_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladmin"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/bronze_to_silver_transformations')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7405616068695817.17.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('bronze_to_silver_transformations_accessToken')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/jdnhs_bronze_data_lake_link')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('jdnhs_bronze_data_lake_link_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('jdnhs_bronze_data_lake_link_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/source_sql_database_link')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('source_sql_database_link_properties_typeProperties_server')]",
+					"database": "[parameters('source_sql_database_link_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('source_sql_database_link_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('source_sql_database_link_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_nss_people_promise_org')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "source_sql_database_link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ods_code",
+						"type": "varchar"
+					},
+					{
+						"name": "org_name",
+						"type": "varchar"
+					},
+					{
+						"name": "benchmarking_group",
+						"type": "varchar"
+					},
+					{
+						"name": "region",
+						"type": "varchar"
+					},
+					{
+						"name": "ics",
+						"type": "varchar"
+					},
+					{
+						"name": "weighting_method",
+						"type": "varchar"
+					},
+					{
+						"name": "metric_code",
+						"type": "varchar"
+					},
+					{
+						"name": "metric_label",
+						"type": "varchar"
+					},
+					{
+						"name": "score",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 3
+					},
+					{
+						"name": "base_n",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "source_file",
+						"type": "varchar"
+					},
+					{
+						"name": "source_sheet",
+						"type": "varchar"
+					},
+					{
+						"name": "load_timestamp",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "jdnhs_nss_people_promise_org"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/source_sql_database_link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_nss_themes_org')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "source_sql_database_link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ods_code",
+						"type": "varchar"
+					},
+					{
+						"name": "org_name",
+						"type": "varchar"
+					},
+					{
+						"name": "benchmarking_group",
+						"type": "varchar"
+					},
+					{
+						"name": "region",
+						"type": "varchar"
+					},
+					{
+						"name": "ics",
+						"type": "varchar"
+					},
+					{
+						"name": "weighting_method",
+						"type": "varchar"
+					},
+					{
+						"name": "metric_code",
+						"type": "varchar"
+					},
+					{
+						"name": "metric_label",
+						"type": "varchar"
+					},
+					{
+						"name": "score",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 3
+					},
+					{
+						"name": "base_n",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "source_file",
+						"type": "varchar"
+					},
+					{
+						"name": "source_sheet",
+						"type": "varchar"
+					},
+					{
+						"name": "load_timestamp",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "jdnhs_nss_themes_org"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/source_sql_database_link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_sickness_absence_region_monthly')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "source_sql_database_link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "month",
+						"type": "date"
+					},
+					{
+						"name": "region_name",
+						"type": "varchar"
+					},
+					{
+						"name": "sickness_absence_rate_pct",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 3
+					},
+					{
+						"name": "source_file",
+						"type": "varchar"
+					},
+					{
+						"name": "source_sheet",
+						"type": "varchar"
+					},
+					{
+						"name": "load_timestamp",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "jdnhs_sickness_absence_region_monthly"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/source_sql_database_link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_workforce_fte_org')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "source_sql_database_link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "data_month",
+						"type": "date"
+					},
+					{
+						"name": "data_type",
+						"type": "varchar"
+					},
+					{
+						"name": "nhse_region_code",
+						"type": "varchar"
+					},
+					{
+						"name": "nhse_region_name",
+						"type": "varchar"
+					},
+					{
+						"name": "ics_code",
+						"type": "varchar"
+					},
+					{
+						"name": "ics_name",
+						"type": "varchar"
+					},
+					{
+						"name": "org_name",
+						"type": "varchar"
+					},
+					{
+						"name": "org_code",
+						"type": "varchar"
+					},
+					{
+						"name": "staff_group_category",
+						"type": "varchar"
+					},
+					{
+						"name": "staff_group_label",
+						"type": "varchar"
+					},
+					{
+						"name": "fte",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "source_file",
+						"type": "varchar"
+					},
+					{
+						"name": "source_sheet",
+						"type": "varchar"
+					},
+					{
+						"name": "load_timestamp",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "jdnhs_workforce_fte_org"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/source_sql_database_link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/source_data_lake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "jdnhs_bronze_data_lake_link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ods_code",
+						"type": "String"
+					},
+					{
+						"name": "org_name",
+						"type": "String"
+					},
+					{
+						"name": "benchmarking_group",
+						"type": "String"
+					},
+					{
+						"name": "region",
+						"type": "String"
+					},
+					{
+						"name": "ics",
+						"type": "String"
+					},
+					{
+						"name": "weighting_method",
+						"type": "String"
+					},
+					{
+						"name": "metric_code",
+						"type": "String"
+					},
+					{
+						"name": "metric_label",
+						"type": "String"
+					},
+					{
+						"name": "score",
+						"type": "String"
+					},
+					{
+						"name": "base_n",
+						"type": "String"
+					},
+					{
+						"name": "source_file",
+						"type": "String"
+					},
+					{
+						"name": "source_sheet",
+						"type": "String"
+					},
+					{
+						"name": "load_timestamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/jdnhs_bronze_data_lake_link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sql_to_bronze')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "nss_people_promise_org",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_nss_people_promise_org",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "source_data_lake",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "nss_themes_org",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "nss_people_promise_org",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_nss_themes_org",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "source_data_lake",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "sickness_absence_region_monthly",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "nss_themes_org",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_sickness_absence_region_monthly",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "source_data_lake",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "workforce_fte_org",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "sickness_absence_region_monthly",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_workforce_fte_org",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "source_data_lake",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-09-15T12:23:15Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_nss_people_promise_org')]",
+				"[concat(variables('factoryId'), '/datasets/source_data_lake')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_nss_themes_org')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_sickness_absence_region_monthly')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_workforce_fte_org')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/orchestration')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute sql_to_bronze",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "sql_to_bronze",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "jdnhs_bronze_to_silver_pipeline_notebook",
+						"type": "DatabricksJob",
+						"dependsOn": [
+							{
+								"activity": "Execute sql_to_bronze",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"jobId": "675968914316141"
+						},
+						"linkedServiceName": {
+							"referenceName": "bronze_to_silver_transformations",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "jdnhs_silver_to_gold_pipeline_notebook",
+						"type": "DatabricksJob",
+						"dependsOn": [
+							{
+								"activity": "jdnhs_bronze_to_silver_pipeline_notebook",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"jobId": "948380784330235"
+						},
+						"linkedServiceName": {
+							"referenceName": "bronze_to_silver_transformations",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-09-17T12:23:26Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/sql_to_bronze')]",
+				"[concat(variables('factoryId'), '/linkedServices/bronze_to_silver_transformations')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/monthly_trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "orchestration",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 1,
+						"startTime": "2026-09-26T16:04:00",
+						"endTime": "2026-10-30T16:04:00",
+						"timeZone": "GMT Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								12
+							],
+							"monthDays": [
+								27
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/orchestration')]"
+			]
+		}
+	]
+}
