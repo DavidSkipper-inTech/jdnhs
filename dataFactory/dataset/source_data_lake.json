@@ -2,7 +2,7 @@
 	"name": "source_data_lake",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "jdnhsBronze_link",
+			"referenceName": "jdnhs_bronze_data_lake_link",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
