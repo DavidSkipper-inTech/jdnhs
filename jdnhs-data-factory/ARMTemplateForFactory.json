@@ -215,7 +215,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"method": "POST",
+							"method": "PUT",
 							"headers": {},
 							"url": "https://teams.microsoft.com/l/message/19:036d6a3a-b8a7-48e5-9fd3-a4dea443df31_51a5fa2a-35c6-4682-b628-beee58b2336c@unq.gbl.spaces/1790441201332?context=%7B%22contextType%22%3A%22chat%22%7D",
 							"body": "Pipeline has started!"
