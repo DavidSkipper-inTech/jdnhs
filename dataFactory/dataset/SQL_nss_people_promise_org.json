@@ -2,7 +2,7 @@
 	"name": "SQL_nss_people_promise_org",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "sqldatabase_connection",
+			"referenceName": "source_sql_database_link",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
