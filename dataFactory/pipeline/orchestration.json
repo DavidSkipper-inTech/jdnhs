@@ -7,7 +7,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Web4",
+						"activity": "emailStart",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -80,7 +80,7 @@
 				}
 			},
 			{
-				"name": "Web1",
+				"name": "emailSourceToBronzeFail",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
@@ -108,7 +108,7 @@
 				}
 			},
 			{
-				"name": "Web2",
+				"name": "EmailSilvertoGoldFail",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
@@ -136,7 +136,7 @@
 				}
 			},
 			{
-				"name": "Web3",
+				"name": "emailBronzetoSilverFail",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
@@ -164,7 +164,7 @@
 				}
 			},
 			{
-				"name": "Web4",
+				"name": "emailStart",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -185,7 +185,7 @@
 				}
 			},
 			{
-				"name": "Web5",
+				"name": "emailSuccess",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
